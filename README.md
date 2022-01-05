@@ -27,3 +27,7 @@ optimal, and in some cases fails to generate a full team (often when the best pl
 
 The algorithm should also work for the case where the "bench" is prepopulated with cheap players,
 and therefore a specific number of defenders, midfielders and forwards are required for the starting 11 (a formation).
+
+## Logs
+
+The results of the latest test can be found in `./logs`.
