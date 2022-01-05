@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { getOptimalTeamForSettings as originalAlgorithm } from "./originalAlgorithm.js";
 import { getOptimalTeamForSettings as newAlgorithm } from "./newAlgorithm.js";
 import {
-  dumpGkpSquad,
+  singleGkpSquad,
   fullSquad,
   skeleton343Squad,
   skeleton433Squad,
@@ -26,12 +26,12 @@ const run = () => {
   console.log("\nExpensive players test");
   testAlgorithms(expensivePlayers, fullSquad);
 
-  console.log("\n**Dump Goalkeeper**");
+  console.log("\n**Single Goalkeeper**");
   console.log("Basic players test");
-  testAlgorithms(players, dumpGkpSquad);
+  testAlgorithms(players, singleGkpSquad);
 
   console.log("\nExpensive players test");
-  testAlgorithms(expensivePlayers, dumpGkpSquad);
+  testAlgorithms(expensivePlayers, singleGkpSquad);
 
   console.log("\n**442**");
   console.log("Basic players test");
@@ -63,15 +63,15 @@ const run = () => {
 };
 
 const testAlgorithms = async (players, settings) => {
-  const dumpPlayers = getDumpPlayers(players, settings);
+  const benchPlayers = getBenchPlayersForSettings(players, settings);
   const newBudget =
-    BUDGET - dumpPlayers.reduce((total, player) => player.value + total, 0);
+    BUDGET - benchPlayers.reduce((total, player) => player.value + total, 0);
   console.log("Original algorithm:");
   const originalAlgorthmResult = runAlgorithm(
     players,
     settings,
     newBudget,
-    dumpPlayers,
+    benchPlayers,
     originalAlgorithm
   );
 
@@ -80,7 +80,7 @@ const testAlgorithms = async (players, settings) => {
     players,
     settings,
     newBudget,
-    dumpPlayers,
+    benchPlayers,
     newAlgorithm
   );
 
@@ -94,12 +94,12 @@ const testAlgorithms = async (players, settings) => {
   }
 };
 
-const runAlgorithm = (players, settings, budget, dumpPlayers, callback) => {
+const runAlgorithm = (players, settings, budget, benchPlayers, callback) => {
   try {
-    const squad = callback(players, settings, budget, dumpPlayers);
+    const squad = callback(players, settings, budget, benchPlayers);
     if (
-      squad.length + dumpPlayers.length !== 15 ||
-      !isValid(squad, settings, dumpPlayers)
+      squad.length + benchPlayers.length !== 15 ||
+      !isValid(squad, settings, benchPlayers)
     ) {
       console.log("Failed to suggest a valid squad!");
       return 0;
@@ -119,16 +119,16 @@ const recordScore = (squad) => {
   return score;
 };
 
-const getDumpPlayers = (players, settings) => {
+const getBenchPlayersForSettings = (players, settings) => {
   return [
-    ...getDumpPlayersForPosition(players, 1, 2 - settings.goalkeepers),
-    ...getDumpPlayersForPosition(players, 2, 5 - settings.defenders),
-    ...getDumpPlayersForPosition(players, 3, 5 - settings.midfielders),
-    ...getDumpPlayersForPosition(players, 4, 3 - settings.forwards),
+    ...getBenchPlayersForPosition(players, 1, 2 - settings.goalkeepers),
+    ...getBenchPlayersForPosition(players, 2, 5 - settings.defenders),
+    ...getBenchPlayersForPosition(players, 3, 5 - settings.midfielders),
+    ...getBenchPlayersForPosition(players, 4, 3 - settings.forwards),
   ];
 };
 
-const getDumpPlayersForPosition = (players, position, numberOfPlayers) => {
+const getBenchPlayersForPosition = (players, position, numberOfPlayers) => {
   return players
     .filter((p) => p.position.id === position)
     .sort((a, b) => a.value - b.value)

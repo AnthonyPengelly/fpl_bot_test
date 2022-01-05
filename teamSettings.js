@@ -7,7 +7,7 @@ export const fullSquad = {
   maxPlayersPerTeam: 3,
 };
 
-export const dumpGkpSquad = {
+export const singleGkpSquad = {
   maxPlayers: 15,
   goalkeepers: 1,
   defenders: 5,

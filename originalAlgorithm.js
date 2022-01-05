@@ -4,7 +4,7 @@ export const getOptimalTeamForSettings = (
   players,
   settings,
   budget,
-  otherPlayersInTeam = []
+  benchPlayers = []
 ) => {
   const W = budget * 100;
   let cache = [];
@@ -31,7 +31,7 @@ export const getOptimalTeamForSettings = (
             excluded.reduce(
               (total, player) => total + Math.round(player.score * 100),
               0
-            ) && isValid(included, settings, otherPlayersInTeam)
+            ) && isValid(included, settings, benchPlayers)
             ? included
             : excluded;
       } else {

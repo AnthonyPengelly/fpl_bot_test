@@ -2,7 +2,7 @@ export const getOptimalTeamForSettings = (
   players,
   settings,
   budget,
-  otherPlayersInTeam = []
+  benchPlayers = []
 ) => {
   const goalkeepers = players.filter(
     (player) => player.position.id === 1 && player.player.team <= 2

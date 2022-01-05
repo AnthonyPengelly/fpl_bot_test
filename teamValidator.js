@@ -1,5 +1,5 @@
-export const isValid = (players, settings, otherPlayersInTeam) => {
-  const fullTeam = players.concat(otherPlayersInTeam);
+export const isValid = (players, settings, benchPlayers) => {
+  const fullTeam = players.concat(benchPlayers);
 
   if (anyDuplicates(fullTeam)) {
     return false;
